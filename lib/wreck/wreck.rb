@@ -5,8 +5,11 @@ module Wreck
     end
 
     def call(env)
-      puts "Wreck in action!"
-      @app.call(env)
+      if Random.rand(2) > 0.5
+        [500, { "Content-Type" => "text/plain" }, ["Sucks to be you!"]]
+      else
+        @app.call(env)
+      end
     end
   end
 end
