@@ -60,7 +60,16 @@ Thanks to the [rack-attack](https://github.com/kickstarter/rack-attack) gem for 
 ```ruby
 Rack::Wreck.rules do
   rule "/login", chance: 0.1,  status: 500
-  rule /widget/, chance: 0.05, status: 403, body: "Nice try!"
+  rule /widget/, chance: 0.05, status: 403, body: "Nice try!" 
+end
+```
+
+It's also possible to delay responses as follows:
+
+```ruby
+Rack::Wreck.rules do
+  rule "/expensive", delay: 5.second
+  # TODO: distributions from https://github.com/clbustos/distribution
 end
 ```
 
