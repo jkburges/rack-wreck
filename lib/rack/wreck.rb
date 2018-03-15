@@ -5,6 +5,16 @@ module Rack
     end
 
     def call(env)
+      # rules.each do |rule|
+      #   if rule.match(env.path)
+      #     rule.call do
+      #       @app.call(env)
+      #     end
+
+      #     break
+      #   end
+      # end
+
       if Random.rand > 0.5
         [500, { "Content-Type" => "text/plain" }, ["Sucks to be you!"]]
       else
