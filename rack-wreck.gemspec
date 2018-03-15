@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'wreck/version'
+require 'rack/wreck/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "wreck"
-  spec.version       = Wreck::VERSION
+  spec.name          = "rack-wreck"
+  spec.version       = Rack::Wreck::VERSION
   spec.authors       = ["Jon Burgess"]
   spec.email         = ["jkburges@gmail.com"]
 
   spec.summary       = "Wreck your server to make your client strong"
   spec.description   = "Chaos Monkey for ruby web servers"
-  spec.homepage      = "https://github.com/jkburges/wreck"
+  spec.homepage      = "https://github.com/jkburges/rack-wreck"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|

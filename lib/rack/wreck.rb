@@ -1,4 +1,4 @@
-module Wreck
+module Rack
   class Wreck
     def initialize(app)
       @app = app
