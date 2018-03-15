@@ -34,3 +34,29 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/jkburg
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
+## Todo
+
+* rules matched top to bottom
+
+* what to fail?
+  * REQUEST_METHODs
+  * PATH_INFO equal, regex
+  * block which takes rack env
+
+* when to fail?
+  * MVP - `Random.rand > x `
+  * extend to https://github.com/clbustos/distribution
+
+* how to fail?
+  * the normal Rack response, e.g. `['500', {'Content-Type' => 'text/html'}, ["You've been wrecked!"]]`
+
+### Example configuration
+
+```ruby
+Rack::Wreck.rules do
+  rule "/login", chance: 0.1,  status: 500
+  rule /widget/, chance: 0.05, status: 403, body: "Nice try!"
+end
+```
+
+This configuration will fail (on average) 1 in every 10 `login` requests with an HTTP `500 Server Error`. Likewise, requests to any endpoints matching the `/widget/` regular expression will fail 1 in every 20 times with an HTTP `403 Forbidden`.
