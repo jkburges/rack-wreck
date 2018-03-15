@@ -16,4 +16,32 @@ describe "rule" do
       refute Rack::Wreck::Rule.new(/foo/).match("/bar")
     end
   end
+
+  describe "call" do
+    it "calls on, on non fire?" do
+      rule = Rack::Wreck::Rule.new("path", status: 500, body: "such fail")
+      rule.stub(:fire?, true) do
+        response = rule.call do
+          [200, {}, ["worked"]]
+        end
+
+        assert_equal 500, response[0]
+        assert_equal "such fail", response[2][0]
+      end
+    end
+
+    it "returns fixed results, on fire?" do
+      rule = Rack::Wreck::Rule.new("path", status: 500, body: "such fail")
+      rule.stub(:fire?, false) do
+        response = rule.call do
+          [200, {}, ["worked"]]
+        end
+
+        assert_equal 200, response[0]
+        assert_equal "worked", response[2][0]
+      end
+    end
+  end
+
+  # describe default response
 end
