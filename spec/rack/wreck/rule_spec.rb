@@ -1,11 +1,19 @@
 require_relative "../../spec_helper"
 
-describe "rule" do
-  it "fails the test" do
-    fail
-  end
+require_relative "../../../lib/rack/wreck/rule"
 
-  it "passes the test" do
-    assert true
+describe "rule" do
+  describe "matching" do
+    it "matches string" do
+      assert Rack::Wreck::Rule.new("/foo").match("/foo")
+      refute Rack::Wreck::Rule.new("/foo").match("/bar")
+    end
+
+    it "matches regex" do
+      assert Rack::Wreck::Rule.new(/foo/).match("/foo/bar")
+      assert Rack::Wreck::Rule.new(/foo/).match("/bar/foo/bar")
+      assert Rack::Wreck::Rule.new(/foo/).match("/bar/foo")
+      refute Rack::Wreck::Rule.new(/foo/).match("/bar")
+    end
   end
 end
