@@ -37,6 +37,8 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/jkburg
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
+Thanks to the [rack-attack](https://github.com/kickstarter/rack-attack) gem for providing a great basis for writing rack middleware!
+
 ## Todo
 
 * rules matched top to bottom
