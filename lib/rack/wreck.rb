@@ -21,5 +21,11 @@ module Rack
         @app.call(env)
       end
     end
+
+    private
+
+    def logger
+      @logger ||= Logger.new(STDOUT)
+    end
   end
 end

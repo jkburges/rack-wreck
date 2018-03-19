@@ -5,6 +5,7 @@ module Rack
 
       def initialize(path = /.*/, opts = {})
         @path = path
+        @chance = opts[:chance]
         @status = opts[:status]
         @body = [opts[:body]]
         @header = opts[:headers]
@@ -26,22 +27,30 @@ module Rack
         true
       end
 
+      def to_s
+        %Q(rule #{path.inspect}, chance: #{chance}, status: #{status}, body: "#{body.first}")
+      end
+
       private
+
+      def chance
+        @chance || 1.0
+      end
 
       def response
         [status, headers, body]
       end
 
       def status
-        @status ||= 200
+        @status || 200
       end
 
       def headers
-        @headers ||= {}
+        @headers || {}
       end
 
       def body
-        @body ||= []
+        @body || []
       end
     end
   end

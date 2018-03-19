@@ -52,4 +52,16 @@ describe "rule" do
       end
     end
   end
+
+  describe "formats itself as string" do
+    it "when path is string" do
+      rule = Rack::Wreck::Rule.new("path", chance: 0.1, status: 500, body: "such fail")
+      assert_equal 'rule "path", chance: 0.1, status: 500, body: "such fail"', rule.to_s
+    end
+
+    it "when path is regex" do
+      rule = Rack::Wreck::Rule.new(/matchme/, chance: 0.4, status: 403, body: "such fail")
+      assert_equal 'rule /matchme/, chance: 0.4, status: 403, body: "such fail"', rule.to_s
+    end
+  end
 end
