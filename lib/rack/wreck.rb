@@ -1,5 +1,20 @@
+require_relative "wreck/rule"
+
 module Rack
   class Wreck
+    class << self
+      attr_reader :rules
+
+      def configure(&block)
+        @rules = []
+        class_eval(&block)
+      end
+
+      def rule(path, opts)
+        @rules << Rule.new(path, opts)
+      end
+    end
+
     def initialize(app)
       @app = app
     end

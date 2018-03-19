@@ -31,8 +31,6 @@ module Rack
         %Q(rule #{path.inspect}, chance: #{chance}, status: #{status}, body: "#{body.first}")
       end
 
-      private
-
       def chance
         @chance || 1.0
       end
@@ -51,6 +49,14 @@ module Rack
 
       def body
         @body || []
+      end
+
+      def ==(other)
+        other.class == self.class && other.state == self.state
+      end
+
+      def state
+        self.instance_variables.map { |variable| self.instance_variable_get variable }
       end
     end
   end
