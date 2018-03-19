@@ -1,4 +1,4 @@
-# Rack::Wreck
+# Rack::Wreck [![Build Status](https://travis-ci.org/jkburges/rack-wreck.svg?branch=master)](https://travis-ci.org/jkburges/rack-wreck)
 
 Selectively cause requests to your rack app to fail - the idea being that by having an artifically flakey API, you are forced to build resilience in to your clients (à la [Chaos Monkey](https://github.com/Netflix/chaosmonkey) from Netflix).
 
