@@ -43,5 +43,13 @@ describe "rule" do
     end
   end
 
-  # describe default response
+  describe "default response" do
+    it "defaults to 200" do
+      rule = Rack::Wreck::Rule.new
+      rule.stub(:fire?, true) do
+        response = rule.call
+        assert_equal 200, response[0]
+      end
+    end
+  end
 end
