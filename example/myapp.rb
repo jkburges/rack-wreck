@@ -6,5 +6,5 @@ configure do
 end
 
 get "/" do
-  "Hello world!"
+  "Hello world!\n"
 end

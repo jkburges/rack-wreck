@@ -16,7 +16,7 @@ module Rack
       # end
 
       if Random.rand > 0.5
-        [500, { "Content-Type" => "text/plain" }, ["Sucks to be you!"]]
+        [500, { "Content-Type" => "text/plain" }, ["Sucks to be you!\n"]]
       else
         @app.call(env)
       end
