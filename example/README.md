@@ -16,3 +16,10 @@ $ while (true);
     do sleep 0.5;
   done;
 ```
+
+```bash
+$ while (true); do
+    curl -s http://localhost:4567/wow >> results;
+    curl -s http://localhost:4567/much >> results;
+  done;
+```

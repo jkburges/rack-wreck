@@ -20,18 +20,14 @@ module Rack
     end
 
     def call(env)
-      # rules.each do |rule|
-      #   if rule.match(env.path)
-      #     rule.call do
-      #       @app.call(env)
-      #     end
+      matching_rule = self.class.rules.detect do |r|
+        r.match(env["PATH_INFO"])
+      end
 
-      #     break
-      #   end
-      # end
-
-      if Random.rand > 0.5
-        [500, { "Content-Type" => "text/plain" }, ["Sucks to be you!\n"]]
+      if matching_rule
+        matching_rule.call do
+          @app.call(env)
+        end
       else
         @app.call(env)
       end

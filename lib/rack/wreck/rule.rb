@@ -24,7 +24,7 @@ module Rack
       end
 
       def fire?
-        Random.rand > chance
+        Random.rand < chance
       end
 
       def to_s
