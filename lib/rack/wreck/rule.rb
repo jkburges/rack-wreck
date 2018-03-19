@@ -3,7 +3,7 @@ module Rack
     class Rule
       attr_reader :path
 
-      def initialize(path, opts = {})
+      def initialize(path = /.*/, opts = {})
         @path = path
         @status = opts[:status]
         @body = [opts[:body]]
