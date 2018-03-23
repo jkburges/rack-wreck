@@ -5,16 +5,22 @@ require_relative "../../../lib/rack/wreck/rule"
 describe "rule" do
   describe "matching" do
     it "matches string" do
-      assert Rack::Wreck::Rule.new("/foo").match("/foo")
-      refute Rack::Wreck::Rule.new("/foo").match("/bar")
-      refute Rack::Wreck::Rule.new("/foo").match("/")
+      assert Rack::Wreck::Rule.new("/foo").match("PATH_INFO" => "/foo")
+      refute Rack::Wreck::Rule.new("/foo").match("PATH_INFO" => "/bar")
+      refute Rack::Wreck::Rule.new("/foo").match("PATH_INFO" => "/")
     end
 
     it "matches regex" do
-      assert Rack::Wreck::Rule.new(/foo/).match("/foo/bar")
-      assert Rack::Wreck::Rule.new(/foo/).match("/bar/foo/bar")
-      assert Rack::Wreck::Rule.new(/foo/).match("/bar/foo")
-      refute Rack::Wreck::Rule.new(/foo/).match("/bar")
+      assert Rack::Wreck::Rule.new(/foo/).match("PATH_INFO" => "/foo/bar")
+      assert Rack::Wreck::Rule.new(/foo/).match("PATH_INFO" => "/bar/foo/bar")
+      assert Rack::Wreck::Rule.new(/foo/).match("PATH_INFO" => "/bar/foo")
+      refute Rack::Wreck::Rule.new(/foo/).match("PATH_INFO" => "/bar")
+    end
+
+    it "matches HTTP method" do
+      assert Rack::Wreck::Rule.new("/", method: :get).match("REQUEST_METHOD" => "GET", "PATH_INFO" => "/")
+      refute Rack::Wreck::Rule.new("/", method: :post).match("REQUEST_METHOD" => "GET", "PATH_INFO" => "/")
+      refute Rack::Wreck::Rule.new("/", method: :get).match("REQUEST_METHOD" => "POST", "PATH_INFO" => "/")
     end
   end
 
@@ -63,6 +69,11 @@ describe "rule" do
     it "when path is regex" do
       rule = Rack::Wreck::Rule.new(/matchme/, chance: 0.4, status: 403, body: "such fail")
       assert_equal 'rule /matchme/, chance: 0.4, status: 403, body: "such fail"', rule.to_s
+    end
+
+    it "includes method" do
+      rule = Rack::Wreck::Rule.new("path", chance: 0.4, status: 403, method: :post)
+      assert_equal 'rule "path", method: :post, chance: 0.4, status: 403, body: ""', rule.to_s
     end
   end
 end

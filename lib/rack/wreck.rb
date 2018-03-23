@@ -21,7 +21,7 @@ module Rack
 
     def call(env)
       matching_rule = self.class.rules.detect do |r|
-        r.match(env["PATH_INFO"])
+        r.match(env)
       end
 
       if matching_rule
