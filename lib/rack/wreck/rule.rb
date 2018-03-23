@@ -1,18 +1,24 @@
 module Rack
   class Wreck
     class Rule
-      attr_reader :path
+      attr_reader :method, :path
 
       def initialize(path = /.*/, opts = {})
         @path = path
+        @method = opts[:method]
         @chance = opts[:chance]
         @status = opts[:status]
         @body = [opts[:body]]
         @header = opts[:headers]
       end
 
-      def match(p)
-        p.match(path)
+      def match(env)
+        constraints = []
+
+        constraints << env["PATH_INFO"].match(path)
+        constraints << (method == env["REQUEST_METHOD"].downcase.to_sym) if method
+
+        constraints.all?
       end
 
       def call(&block)
@@ -30,7 +36,12 @@ module Rack
       end
 
       def to_s
-        %Q(rule #{path.inspect}, chance: #{chance}, status: #{status}, body: "#{body.first}")
+        fragments = []
+        fragments << "rule #{path.inspect}"
+        fragments << "method: #{method.inspect}" if method
+        fragments << %Q(chance: #{chance}, status: #{status}, body: "#{body.first}")
+
+        fragments.join(", ")
       end
 
       def chance

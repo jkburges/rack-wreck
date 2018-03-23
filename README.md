@@ -44,8 +44,6 @@ Thanks to the [rack-attack](https://github.com/kickstarter/rack-attack) gem for 
 * rules matched top to bottom
 
 * what to fail?
-  * REQUEST_METHODs
-  * PATH_INFO equal, regex
   * block which takes rack env
 
 * when to fail?
@@ -59,7 +57,7 @@ Thanks to the [rack-attack](https://github.com/kickstarter/rack-attack) gem for 
 
 ```ruby
 Rack::Wreck.rules do
-  rule "/login", chance: 0.1,  status: 500
+  rule "/login", method: :post, chance: 0.1,  status: 500
   rule /widget/, chance: 0.05, status: 403, body: "Nice try!" 
 end
 ```
