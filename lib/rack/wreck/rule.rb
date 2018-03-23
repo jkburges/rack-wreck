@@ -12,7 +12,7 @@ module Rack
       end
 
       def match(p)
-        path.match(p)
+        p.match(path)
       end
 
       def call(&block)

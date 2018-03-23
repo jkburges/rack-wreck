@@ -7,6 +7,7 @@ describe "rule" do
     it "matches string" do
       assert Rack::Wreck::Rule.new("/foo").match("/foo")
       refute Rack::Wreck::Rule.new("/foo").match("/bar")
+      refute Rack::Wreck::Rule.new("/foo").match("/")
     end
 
     it "matches regex" do
