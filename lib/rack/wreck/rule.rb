@@ -1,13 +1,17 @@
+require "active_support"
+require "active_support/core_ext/numeric"
+
 module Rack
   class Wreck
     class Rule
-      attr_reader :method, :path
+      attr_reader :path, :method, :delay
 
       def initialize(path = /.*/, opts = {})
         @path = path
         @method = opts[:method]
         @chance = opts[:chance]
         @status = opts[:status]
+        @delay = opts[:delay]
         @body = [opts[:body]]
         @header = opts[:headers]
       end
@@ -22,11 +26,14 @@ module Rack
       end
 
       def call(&block)
-        if fire?
+        res = if fire?
           response
         else
           yield
         end
+
+        sleep(delay) if delay
+        res
       end
 
       def fire?

@@ -66,7 +66,7 @@ It's also possible to delay responses as follows:
 
 ```ruby
 Rack::Wreck.configure do
-  rule "/expensive", delay: 5.second
+  rule "/expensive", delay: 5.seconds
   # TODO: distributions from https://github.com/clbustos/distribution
 end
 ```

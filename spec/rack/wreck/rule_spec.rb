@@ -50,6 +50,20 @@ describe "rule" do
     end
   end
 
+  describe "delays" do
+    it "delays the reponse" do
+      sleep_mock = Minitest::Mock.new
+      sleep_mock.expect(:call, nil, [5.seconds])
+
+      rule = Rack::Wreck::Rule.new("/", delay: 5.seconds)
+      rule.stub(:sleep, sleep_mock) do
+        rule.call
+      end
+
+      sleep_mock.verify
+    end
+  end
+
   describe "default response" do
     it "defaults to 200" do
       rule = Rack::Wreck::Rule.new
