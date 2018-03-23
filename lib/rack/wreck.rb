@@ -25,10 +25,12 @@ module Rack
       end
 
       if matching_rule
+        logger.debug("Matching rule: #{matching_rule}, env: #{env}")
         matching_rule.call do
           @app.call(env)
         end
       else
+        logger.debug("No matching rule, env: #{env}")
         @app.call(env)
       end
     end
@@ -36,7 +38,7 @@ module Rack
     private
 
     def logger
-      @logger ||= Logger.new(STDOUT)
+      @logger ||= ::Logger.new(STDOUT)
     end
   end
 end

@@ -24,7 +24,9 @@ module Rack
       end
 
       def fire?
-        Random.rand < chance
+        firing = Random.rand < chance
+        logger.debug("Rule firing: #{firing}")
+        firing
       end
 
       def to_s
@@ -57,6 +59,12 @@ module Rack
 
       def state
         self.instance_variables.map { |variable| self.instance_variable_get variable }
+      end
+
+      private
+
+      def logger
+        @logger ||= ::Logger.new(STDOUT)
       end
     end
   end
