@@ -5,7 +5,7 @@ require_relative "../../lib/rack/wreck/delay"
 require_relative "../../lib/rack/wreck/override"
 
 describe "wreck" do
-  it "configures overrides with DSL" do
+  it "configures using DSL" do
     Rack::Wreck.configure do
       override "/", chance: 0.1, status: 500
       override /widget/, chance: 0.05, status: 403, body: "Nice try!"
@@ -17,10 +17,15 @@ describe "wreck" do
     assert_equal Rack::Wreck::Delay.new("/slow", 3.seconds), Rack::Wreck.delays[0]
   end
 
-  it "calls override" do
+  describe "call logic" do
     class TestWreck < Rack::Wreck
+      def initialize(app, match)
+        @match = match
+        super(app)
+      end
+
       def override(env)
-        OpenStruct.new(call: "override call")
+        @match ? OpenStruct.new(call: "override call") : nil
       end
 
       def app_call(env)
@@ -28,32 +33,19 @@ describe "wreck" do
       end
     end
 
-    app = Object.new
-    env = Object.new
-
-    wreck = TestWreck.new (app)
-    assert_equal "override call", wreck.call(env)
-  end
-
-  it "calls app" do
-    class TestWreck < Rack::Wreck
-      def override(env)
-        nil
-      end
-
-      def app_call(env)
-        "app call"
-      end
+    before do
+      @app = Object.new
+      @env = Object.new
     end
 
-    app = Object.new
-    env = Object.new
+    it "calls override" do
+      wreck = TestWreck.new(@app, true)
+      assert_equal "override call", wreck.call(@env)
+    end
 
-    wreck = TestWreck.new (app)
-    assert_equal "app call", wreck.call(env)
-  end
-
-  it "executes matched delay" do
-
+    it "calls app" do
+      wreck = TestWreck.new(@app, false)
+      assert_equal "app call", wreck.call(@env)
+    end
   end
 end
