@@ -1,17 +1,17 @@
-require_relative "wreck/rule"
+require_relative "wreck/override"
 
 module Rack
   class Wreck
     class << self
-      attr_reader :rules
+      attr_reader :overrides
 
       def configure(&block)
-        @rules = []
+        @overrides = []
         class_eval(&block)
       end
 
-      def rule(path, opts)
-        @rules << Rule.new(path, opts)
+      def override(path, opts)
+        @overrides << Override.new(path, opts)
       end
     end
 
@@ -20,17 +20,17 @@ module Rack
     end
 
     def call(env)
-      matching_rule = self.class.rules.detect do |r|
+      matching_override = self.class.overrides.detect do |r|
         r.match(env)
       end
 
-      if matching_rule
-        logger.debug("Matching rule: #{matching_rule}, env: #{env}")
-        matching_rule.call do
+      if matching_override
+        logger.debug("Matching override: #{matching_override}, env: #{env}")
+        matching_override.call do
           @app.call(env)
         end
       else
-        logger.debug("No matching rule, env: #{env}")
+        logger.debug("No matching override, env: #{env}")
         @app.call(env)
       end
     end

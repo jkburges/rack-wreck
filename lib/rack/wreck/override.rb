@@ -1,6 +1,6 @@
 module Rack
   class Wreck
-    class Rule
+    class Override
       attr_reader :method, :path
 
       def initialize(path = /.*/, opts = {})
@@ -31,13 +31,13 @@ module Rack
 
       def fire?
         firing = Random.rand < chance
-        logger.debug("Rule firing: #{firing}")
+        logger.debug("Override firing: #{firing}")
         firing
       end
 
       def to_s
         fragments = []
-        fragments << "rule #{path.inspect}"
+        fragments << "override #{path.inspect}"
         fragments << "method: #{method.inspect}" if method
         fragments << %Q(chance: #{chance}, status: #{status}, body: "#{body.first}")
 
