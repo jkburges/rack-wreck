@@ -3,6 +3,10 @@ module Rack
     class Override
       attr_reader :method, :path
 
+      def self.null
+        Override.new(/.*/, chance: 0)
+      end
+
       def initialize(path = /.*/, opts = {})
         @path = path
         @method = opts[:method]

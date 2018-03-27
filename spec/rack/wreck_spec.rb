@@ -19,17 +19,8 @@ describe "wreck" do
 
   describe "call logic" do
     class TestWreck < Rack::Wreck
-      def initialize(app, match)
-        @match = match
-        super(app)
-      end
-
       def override(env)
-        @match ? OpenStruct.new(call: "override call") : nil
-      end
-
-      def app_call(env)
-        "app call"
+        OpenStruct.new(call: "override call")
       end
     end
 
@@ -39,13 +30,8 @@ describe "wreck" do
     end
 
     it "calls override" do
-      wreck = TestWreck.new(@app, true)
+      wreck = TestWreck.new(@app)
       assert_equal "override call", wreck.call(@env)
-    end
-
-    it "calls app" do
-      wreck = TestWreck.new(@app, false)
-      assert_equal "app call", wreck.call(@env)
     end
   end
 end
