@@ -16,4 +16,44 @@ describe "wreck" do
     assert_equal Rack::Wreck::Override.new(/widget/, chance: 0.05, status: 403, body: "Nice try!"), Rack::Wreck.overrides[1]
     assert_equal Rack::Wreck::Delay.new("/slow", 3.seconds), Rack::Wreck.delays[0]
   end
+
+  it "calls override" do
+    class TestWreck < Rack::Wreck
+      def override(env)
+        OpenStruct.new(call: "override call")
+      end
+
+      def app_call(env)
+        "app call"
+      end
+    end
+
+    app = Object.new
+    env = Object.new
+
+    wreck = TestWreck.new (app)
+    assert_equal "override call", wreck.call(env)
+  end
+
+  it "calls app" do
+    class TestWreck < Rack::Wreck
+      def override(env)
+        nil
+      end
+
+      def app_call(env)
+        "app call"
+      end
+    end
+
+    app = Object.new
+    env = Object.new
+
+    wreck = TestWreck.new (app)
+    assert_equal "app call", wreck.call(env)
+  end
+
+  it "executes matched delay" do
+
+  end
 end
