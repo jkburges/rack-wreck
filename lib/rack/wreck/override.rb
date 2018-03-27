@@ -1,6 +1,8 @@
+require_relative "rule"
+
 module Rack
   class Wreck
-    class Override
+    class Override < Rule
       attr_reader :method, :path
 
       def self.null
@@ -8,21 +10,12 @@ module Rack
       end
 
       def initialize(path = /.*/, opts = {})
-        @path = path
-        @method = opts[:method]
+        super(path, opts)
+
         @chance = opts[:chance]
         @status = opts[:status]
         @body = [opts[:body]]
         @header = opts[:headers]
-      end
-
-      def match(env)
-        constraints = []
-
-        constraints << env["PATH_INFO"].match(path)
-        constraints << (method == env["REQUEST_METHOD"].downcase.to_sym) if method
-
-        constraints.all?
       end
 
       def call(&block)
@@ -66,20 +59,6 @@ module Rack
 
       def body
         @body || []
-      end
-
-      def ==(other)
-        other.class == self.class && other.state == self.state
-      end
-
-      def state
-        self.instance_variables.map { |variable| self.instance_variable_get variable }
-      end
-
-      private
-
-      def logger
-        @logger ||= ::Logger.new(STDOUT)
       end
     end
   end
