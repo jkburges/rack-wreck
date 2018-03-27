@@ -3,11 +3,17 @@ require_relative "wreck/override"
 module Rack
   class Wreck
     class << self
-      attr_reader :overrides
+      attr_reader :delays, :overrides
 
       def configure(&block)
+        @delays = []
         @overrides = []
+
         class_eval(&block)
+      end
+
+      def delay(path, opts)
+        @delays << Delay.new(path, opts)
       end
 
       def override(path, opts)
@@ -32,6 +38,17 @@ module Rack
       else
         logger.debug("No matching override, env: #{env}")
         @app.call(env)
+      end
+
+      matching_delay = self.class.delays.detect do |r|
+        r.match(env)
+      end
+
+      if matching_delay
+        logger.debug("Matching delay: #{matching_delay}, env: #{env}")
+        matching_delay.wait
+      else
+        logger.debug("No matching delay, env: #{env}")
       end
     end
 
