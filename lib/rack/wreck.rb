@@ -11,6 +11,7 @@ module Rack
 
         class_eval(&block)
 
+        @delays << Delay.null
         @overrides << Override.null
       end
 
@@ -27,6 +28,12 @@ module Rack
       @app = app
     end
 
+    def delay(env)
+      self.class.delay.detect do |r|
+        r.match(env)
+      end
+    end
+
     def override(env)
       self.class.overrides.detect do |r|
         r.match(env)
@@ -34,9 +41,13 @@ module Rack
     end
 
     def call(env)
-      override(env).call do
+      result = override(env).call do
         @app.call(env)
       end
+
+      delay(env).call
+
+      result
     end
 
     private

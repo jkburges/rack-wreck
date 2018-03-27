@@ -6,6 +6,10 @@ module Rack
     class Delay
       attr_reader :path, :amount, :method
 
+      def self.null
+        Delay.new(/.*/, amount: 0)
+      end
+
       def initialize(path = /.*/, amount = 1.seconds, opts = {})
         @path = path
         @amount = amount
