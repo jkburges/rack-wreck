@@ -51,11 +51,11 @@ describe "override" do
   end
 
   describe "default response" do
-    it "defaults to 200" do
+    it "defaults to 500" do
       override = Rack::Wreck::Override.new
       override.stub(:fire?, true) do
         response = override.call
-        assert_equal 200, response[0]
+        assert_equal 500, response[0]
       end
     end
   end

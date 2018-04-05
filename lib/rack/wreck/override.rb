@@ -3,7 +3,7 @@ require_relative "rule"
 module Rack
   class Wreck
     class Override < Rule
-      attr_reader :method, :path
+      attr_reader :status
 
       def self.null
         Override.new(/.*/, chance: 0)
@@ -13,7 +13,7 @@ module Rack
         super(path, opts)
 
         @chance = opts[:chance]
-        @status = opts[:status]
+        @status = opts.fetch(:status, 500)
         @body = [opts[:body]]
         @header = opts[:headers]
       end
@@ -47,10 +47,6 @@ module Rack
 
       def response
         [status, headers, body]
-      end
-
-      def status
-        @status || 200
       end
 
       def headers
