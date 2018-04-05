@@ -16,11 +16,11 @@ module Rack
         @overrides << Override.null
       end
 
-      def delay(path, opts)
+      def delay(path, opts = {})
         @delays << Delay.new(path, opts)
       end
 
-      def override(path, opts)
+      def override(path, opts = {})
         @overrides << Override.new(path, opts)
       end
     end
