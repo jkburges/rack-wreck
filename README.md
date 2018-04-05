@@ -57,8 +57,8 @@ Thanks to the [rack-attack](https://github.com/kickstarter/rack-attack) gem for 
 
 ```ruby
 Rack::Wreck.rules do
-  rule "/login", method: :post, chance: 0.1,  status: 500
-  rule /widget/, chance: 0.05, status: 403, body: "Nice try!" 
+  override "/login", method: :post, chance: 0.1, status: 500
+  override /widget/, chance: 0.05, status: 403, body: "Nice try!"
 end
 ```
 
@@ -66,9 +66,7 @@ It's also possible to delay responses as follows:
 
 ```ruby
 Rack::Wreck.configure do
-  rule "/expensive", delay: 5.second
+  delay "/expensive", duration: 5.seconds
   # TODO: distributions from https://github.com/clbustos/distribution
 end
 ```
-
-This configuration will fail (on average) 1 in every 10 `login` requests with an HTTP `500 Server Error`. Likewise, requests to any endpoints matching the `/widget/` regular expression will fail 1 in every 20 times with an HTTP `403 Forbidden`.

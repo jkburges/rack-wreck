@@ -1,17 +1,27 @@
-require_relative "wreck/rule"
+require_relative "wreck/delay"
+require_relative "wreck/override"
 
 module Rack
   class Wreck
     class << self
-      attr_reader :rules
+      attr_reader :delays, :overrides
 
       def configure(&block)
-        @rules = []
+        @delays = []
+        @overrides = []
+
         class_eval(&block)
+
+        @delays << Delay.null
+        @overrides << Override.null
       end
 
-      def rule(path, opts)
-        @rules << Rule.new(path, opts)
+      def delay(path, opts = {})
+        @delays << Delay.new(path, opts)
+      end
+
+      def override(path, opts = {})
+        @overrides << Override.new(path, opts)
       end
     end
 
@@ -19,20 +29,26 @@ module Rack
       @app = app
     end
 
-    def call(env)
-      matching_rule = self.class.rules.detect do |r|
+    def delay(env)
+      self.class.delays.detect do |r|
         r.match(env)
       end
+    end
 
-      if matching_rule
-        logger.debug("Matching rule: #{matching_rule}, env: #{env}")
-        matching_rule.call do
-          @app.call(env)
-        end
-      else
-        logger.debug("No matching rule, env: #{env}")
+    def override(env)
+      self.class.overrides.detect do |r|
+        r.match(env)
+      end
+    end
+
+    def call(env)
+      result = override(env).call do
         @app.call(env)
       end
+
+      delay(env).call
+
+      result
     end
 
     private
