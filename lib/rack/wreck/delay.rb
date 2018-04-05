@@ -11,13 +11,13 @@ module Rack
         Delay.new(/.*/, amount: 0)
       end
 
-      def initialize(path = /.*/, amount = 1.seconds, opts = {})
+      def initialize(path = /.*/, opts = {})
         super(path, opts)
 
-        @amount = amount
+        @amount = opts.fetch(:amount, 1.second)
       end
 
-      def exec
+      def call
         sleep(amount)
       end
 

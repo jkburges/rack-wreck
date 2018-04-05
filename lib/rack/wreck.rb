@@ -1,3 +1,4 @@
+require_relative "wreck/delay"
 require_relative "wreck/override"
 
 module Rack
@@ -29,7 +30,7 @@ module Rack
     end
 
     def delay(env)
-      self.class.delay.detect do |r|
+      self.class.delays.detect do |r|
         r.match(env)
       end
     end
