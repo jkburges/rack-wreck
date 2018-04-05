@@ -26,26 +26,26 @@ describe "override" do
 
   describe "call" do
     it "calls on, on non fire?" do
-      override = Rack::Wreck::Override.new("path", status: 500, body: "such fail")
+      override = Rack::Wreck::Override.new("path", status: 500, body: ["such fail"])
       override.stub(:fire?, true) do
         response = override.call do
           [200, {}, ["worked"]]
         end
 
         assert_equal 500, response[0]
-        assert_equal "such fail", response[2][0]
+        assert_equal ["such fail"], response[2]
       end
     end
 
     it "returns fixed results, on fire?" do
-      override = Rack::Wreck::Override.new("path", status: 500, body: "such fail")
+      override = Rack::Wreck::Override.new("path", status: 500, body: ["such fail"])
       override.stub(:fire?, false) do
         response = override.call do
           [200, {}, ["worked"]]
         end
 
         assert_equal 200, response[0]
-        assert_equal "worked", response[2][0]
+        assert_equal ["worked"], response[2]
       end
     end
   end
@@ -73,7 +73,7 @@ describe "override" do
 
     it "includes method" do
       override = Rack::Wreck::Override.new("path", chance: 0.4, status: 403, method: :post)
-      assert_equal 'override "path", method: :post, chance: 0.4, status: 403, body: ""', override.to_s
+      assert_equal 'override "path", method: :post, chance: 0.4, status: 403, body: "[]"', override.to_s
     end
   end
 end

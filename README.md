@@ -58,7 +58,7 @@ Thanks to the [rack-attack](https://github.com/kickstarter/rack-attack) gem for 
 ```ruby
 Rack::Wreck.rules do
   override "/login", method: :post, chance: 0.1, status: 500
-  override /widget/, chance: 0.05, status: 403, body: "Nice try!"
+  override /widget/, chance: 0.05, status: 403, body: ["Nice try!"]
 end
 ```
 
