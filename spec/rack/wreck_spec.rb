@@ -19,10 +19,10 @@ describe "wreck" do
 
     it "configures delays" do
       Rack::Wreck.configure do
-        delay "/slow", amount: 3.seconds
+        delay "/slow", duration: 3.seconds
       end
 
-      assert_equal Rack::Wreck::Delay.new("/slow", amount: 3.seconds), Rack::Wreck.delays[0]
+      assert_equal Rack::Wreck::Delay.new("/slow", duration: 3.seconds), Rack::Wreck.delays[0]
       assert_equal Rack::Wreck::Delay.null, Rack::Wreck.delays.last
     end
   end

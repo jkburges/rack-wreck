@@ -5,26 +5,26 @@ require_relative "rule"
 module Rack
   class Wreck
     class Delay < Rule
-      attr_reader :amount
+      attr_reader :duration
 
       def self.null
-        Delay.new(/.*/, amount: 0)
+        Delay.new(/.*/, duration: 0)
       end
 
       def initialize(path = /.*/, opts = {})
         super(path, opts)
 
-        @amount = opts.fetch(:amount, 1.second)
+        @duration = opts.fetch(:duration, 1.second)
       end
 
       def call
-        sleep(amount)
+        sleep(duration)
       end
 
       def to_s
         fragments = []
         fragments << "delay #{path.inspect}"
-        fragments << amount
+        fragments << duration
         fragments << "method: #{method.inspect}" if method
 
         fragments.join(", ")
