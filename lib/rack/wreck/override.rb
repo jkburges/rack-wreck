@@ -3,7 +3,7 @@ require_relative "rule"
 module Rack
   class Wreck
     class Override < Rule
-      attr_reader :method, :path
+      attr_reader :body, :chance, :headers, :status
 
       def self.null
         Override.new(/.*/, chance: 0)
@@ -12,10 +12,10 @@ module Rack
       def initialize(path = /.*/, opts = {})
         super(path, opts)
 
-        @chance = opts[:chance]
-        @status = opts[:status]
-        @body = [opts[:body]]
-        @header = opts[:headers]
+        @chance = opts.fetch(:chance, 1.0)
+        @status = opts.fetch(:status, 500)
+        @body = opts.fetch(:body, [])
+        @headers = opts.fetch(:headers, {})
       end
 
       def call(&block)
@@ -36,29 +36,13 @@ module Rack
         fragments = []
         fragments << "override #{path.inspect}"
         fragments << "method: #{method.inspect}" if method
-        fragments << %Q(chance: #{chance}, status: #{status}, body: "#{body.first}")
+        fragments << %Q(chance: #{chance}, status: #{status}, body: "#{body}")
 
         fragments.join(", ")
       end
 
-      def chance
-        @chance || 1.0
-      end
-
       def response
         [status, headers, body]
-      end
-
-      def status
-        @status || 200
-      end
-
-      def headers
-        @headers || {}
-      end
-
-      def body
-        @body || []
       end
     end
   end
