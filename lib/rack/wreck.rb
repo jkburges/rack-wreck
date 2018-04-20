@@ -1,28 +1,9 @@
-require_relative "wreck/delay"
-require_relative "wreck/override"
+require_relative "wreck/dsl"
 
 module Rack
   class Wreck
     class << self
-      attr_reader :delays, :overrides
-
-      def configure(&block)
-        @delays = []
-        @overrides = []
-
-        class_eval(&block)
-
-        @delays << Delay.null
-        @overrides << Override.null
-      end
-
-      def delay(path, opts = {})
-        @delays << Delay.new(path, opts)
-      end
-
-      def override(path, opts = {})
-        @overrides << Override.new(path, opts)
-      end
+      include Dsl
     end
 
     def initialize(app)
