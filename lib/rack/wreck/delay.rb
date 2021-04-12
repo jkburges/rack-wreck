@@ -18,6 +18,7 @@ module Rack
       end
 
       def call
+        logger.debug("Delay (s): #{duration}")
         sleep(duration)
       end
 
